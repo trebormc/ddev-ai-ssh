@@ -26,8 +26,8 @@ RUN mkdir -p /etc/ssh/sshd_config.d && \
 RUN printf '#!/bin/bash\n. /etc/ddev-env 2>/dev/null\ncd /var/www/html\nif [ -n "$SSH_ORIGINAL_COMMAND" ]; then\n    eval "$SSH_ORIGINAL_COMMAND"\nelse\n    exec bash -l\nfi\n' \
     > /usr/local/bin/ai-ssh-command.sh && chmod +x /usr/local/bin/ai-ssh-command.sh
 
-# Setup script: copies SSH public key to authorized_keys, saves env, starts sshd
-RUN printf '#!/bin/bash\nKEY="/var/www/html/.ddev/.agent-ssh-keys/id_ed25519.pub"\nfor i in $(seq 1 30); do [ -f "$KEY" ] && break; sleep 1; done\nif [ -f "$KEY" ]; then\n    mkdir -p /home/ddev/.ssh\n    cp "$KEY" /home/ddev/.ssh/authorized_keys\n    chmod 700 /home/ddev/.ssh && chmod 600 /home/ddev/.ssh/authorized_keys\n    chown -R ddev:ddev /home/ddev/.ssh\nfi\nprintenv | grep -E "^(DDEV_|IS_DDEV_PROJECT|PATH=)" | sed "s/^/export /" > /etc/ddev-env\nchmod 644 /etc/ddev-env\nexec /usr/sbin/sshd -D -e\n' \
+# Setup script: generates keys if missing, configures authorized_keys, starts sshd
+RUN printf '#!/bin/bash\nKEY_DIR="/var/www/html/.ddev/.agent-ssh-keys"\nKEY="$KEY_DIR/id_ed25519.pub"\n# Generate keys if missing (fresh clone without reinstalling add-ons)\nif [ ! -f "$KEY_DIR/id_ed25519" ]; then\n    mkdir -p "$KEY_DIR"\n    ssh-keygen -t ed25519 -f "$KEY_DIR/id_ed25519" -N "" -C "ddev-agent" 2>/dev/null\n    chmod 600 "$KEY_DIR/id_ed25519"\n    chmod 644 "$KEY_DIR/id_ed25519.pub"\n    chown -R $(stat -c %%u:%%g /var/www/html) "$KEY_DIR"\nfi\nif [ -f "$KEY" ]; then\n    mkdir -p /home/ddev/.ssh\n    cp "$KEY" /home/ddev/.ssh/authorized_keys\n    chmod 700 /home/ddev/.ssh && chmod 600 /home/ddev/.ssh/authorized_keys\n    chown -R ddev:ddev /home/ddev/.ssh\nfi\nprintenv | grep -E "^(DDEV_|IS_DDEV_PROJECT|PATH=)" | sed "s/^/export /" > /etc/ddev-env\nchmod 644 /etc/ddev-env\nexec /usr/sbin/sshd -D -e\n' \
     > /usr/local/bin/ai-ssh-setup.sh && chmod +x /usr/local/bin/ai-ssh-setup.sh
 
 COPY sshd-supervisor.conf /etc/supervisor/conf.d/sshd.conf

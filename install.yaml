@@ -1,0 +1,42 @@
+name: ddev-ai-ssh
+
+ddev_version_constraint: '>= v1.24.10'
+
+dependencies: []
+
+pre_install_actions:
+  - |
+    #ddev-description:Checking prerequisites for AI SSH
+    echo "Installing ddev-ai-ssh add-on..."
+
+project_files:
+  - docker-compose.ai-ssh.yaml
+  - web-build/Dockerfile.ai-ssh
+  - web-build/sshd-supervisor.conf
+  - commands/host/ai-ssh-status
+
+global_files: []
+
+post_install_actions:
+  - |
+    #ddev-description:Generating SSH keys for AI agent access
+    mkdir -p .agent-ssh-keys
+    if [ ! -f .agent-ssh-keys/id_ed25519 ]; then
+      ssh-keygen -t ed25519 -f .agent-ssh-keys/id_ed25519 -N "" -C "ddev-agent" 2>/dev/null
+      chmod 600 .agent-ssh-keys/id_ed25519
+      chmod 644 .agent-ssh-keys/id_ed25519.pub
+      echo "Generated SSH keys for AI agent access"
+    else
+      echo "SSH keys already exist, skipping"
+    fi
+    # Add SSH keys to .gitignore
+    grep -qxF '.ddev/.agent-ssh-keys/' ../.gitignore 2>/dev/null || echo '.ddev/.agent-ssh-keys/' >> ../.gitignore
+    echo ""
+    echo "AI SSH add-on installed successfully!"
+    echo "SSH keys generated in .ddev/.agent-ssh-keys/"
+
+removal_actions:
+  - |
+    #ddev-description:Cleaning up AI SSH
+    echo "AI SSH add-on removed."
+    echo "SSH keys in .ddev/.agent-ssh-keys/ were NOT deleted (remove manually if needed)."

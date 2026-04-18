@@ -1,4 +1,7 @@
 [![add-on registry](https://img.shields.io/badge/DDEV-Add--on_Registry-blue)](https://addons.ddev.com)
+[![tests](https://github.com/trebormc/ddev-ai-ssh/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/trebormc/ddev-ai-ssh/actions/workflows/tests.yml?query=branch%3Amain)
+[![last commit](https://img.shields.io/github/last-commit/trebormc/ddev-ai-ssh)](https://github.com/trebormc/ddev-ai-ssh/commits)
+[![release](https://img.shields.io/github/v/release/trebormc/ddev-ai-ssh)](https://github.com/trebormc/ddev-ai-ssh/releases/latest)
 
 # ddev-ai-ssh
 

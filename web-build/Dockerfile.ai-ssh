@@ -1,6 +1,6 @@
 #ddev-generated
 # Install sshd in the web container for AI agent SSH access.
-# AI containers connect via SSH instead of docker exec, limiting scope to this project only.
+# AI containers connect via SSH, with per-project key isolation.
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends openssh-server && \

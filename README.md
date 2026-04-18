@@ -10,11 +10,9 @@ A DDEV add-on that enables SSH access to the web container for AI agents. Instal
 
 > **Note:** This add-on is typically installed automatically as a dependency of [ddev-opencode](https://github.com/trebormc/ddev-opencode) or [ddev-claude-code](https://github.com/trebormc/ddev-claude-code). You rarely need to install it directly.
 
-## Why SSH instead of Docker socket?
+## Why SSH?
 
-Previously, AI containers mounted `/var/run/docker.sock` to execute commands in the web container via `docker exec`. This works but gives the AI agent access to the entire Docker daemon on the host (any container, any project, with the ability to create privileged containers). In practice, it is equivalent to root on the host.
-
-With SSH, the AI agent can only connect to the web container of the same project, using a key that is unique to that project. Different DDEV projects have different keys, so containers from one project cannot access another.
+SSH provides per-project isolation with minimal attack surface. Each DDEV project has a unique ed25519 key pair, so AI containers can only connect to the web container of their own project. Different projects have different keys, preventing cross-project access.
 
 ## What it does
 
@@ -23,7 +21,7 @@ With SSH, the AI agent can only connect to the web container of the same project
 3. Configures the ddev user's `authorized_keys` on every `ddev start`
 4. Hardens sshd: no root login, no password auth, no TCP/X11 forwarding
 
-AI containers then use `ssh web <command>` instead of `docker exec $WEB_CONTAINER <command>`.
+AI containers use `ssh web <command>` to run commands in the web container (drush, composer, phpunit, etc.).
 
 ## Quick Start
 

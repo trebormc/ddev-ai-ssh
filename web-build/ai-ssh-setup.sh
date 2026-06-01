@@ -14,6 +14,12 @@ if [ -f "$KEY" ]; then
     cp "$KEY" ~/.ssh/authorized_keys
     chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
 fi
+# Suppress "Permanently added" warning for agent SSH connections
+mkdir -p ~/.ssh
+if ! grep -q '^Host web$' ~/.ssh/config 2>/dev/null; then
+    printf 'Host web\n  LogLevel ERROR\n' >> ~/.ssh/config
+fi
+chmod 600 ~/.ssh/config
 # Write username so AI containers know which user to SSH as
 echo "$(whoami)" > "$KEY_DIR/web-user"
 # Unlock user account (sshd rejects locked accounts even with key auth)

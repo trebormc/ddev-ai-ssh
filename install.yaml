@@ -12,6 +12,8 @@ pre_install_actions:
 project_files:
   - docker-compose.ai-ssh.yaml
   - web-build/Dockerfile.ai-ssh
+  - web-build/ai-ssh-command.sh
+  - web-build/ai-ssh-setup.sh
   - web-build/sshd-supervisor.conf
   - commands/host/ai-ssh-status
 

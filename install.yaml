@@ -29,8 +29,13 @@ post_install_actions:
     else
       echo "SSH keys already exist, skipping"
     fi
-    # Add SSH keys to .gitignore
-    grep -qxF '.ddev/.agent-ssh-keys/' ../.gitignore 2>/dev/null || echo '.ddev/.agent-ssh-keys/' >> ../.gitignore
+    # Self-contained .gitignore: ignore all SSH keys without touching the project's root .gitignore
+    cat > .agent-ssh-keys/.gitignore <<'EOF'
+    # Ignore everything in this directory
+    *
+    # Except this file
+    !.gitignore
+    EOF
     echo ""
     echo "AI SSH add-on installed successfully!"
     echo "SSH keys generated in .ddev/.agent-ssh-keys/"

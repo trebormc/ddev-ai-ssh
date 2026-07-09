@@ -21,8 +21,10 @@ if [ -n "$SSHD_PID" ]; then
     echo "sshd in web: RUNNING (pid $SSHD_PID)"
 else
     echo "sshd in web: NOT RUNNING"
+    SUPERVISOR_STATUS=$(ddev exec sudo supervisorctl status sshd 2>/dev/null)
+    [ -n "$SUPERVISOR_STATUS" ] && echo "  supervisor: $SUPERVISOR_STATUS"
 fi
 
-# Check authorized_keys
-AUTH_CHECK=$(ddev exec test -f /home/ddev/.ssh/authorized_keys 2>/dev/null && echo "OK" || echo "MISSING")
+# Check authorized_keys (home dir varies — DDEV maps the host user into the container)
+AUTH_CHECK=$(ddev exec 'test -f "$HOME/.ssh/authorized_keys"' 2>/dev/null && echo "OK" || echo "MISSING")
 echo "authorized_keys: $AUTH_CHECK"

@@ -80,7 +80,7 @@ SSH keys in `.ddev/.agent-ssh-keys/` are NOT deleted automatically.
 | [ddev-opencode](https://github.com/trebormc/ddev-opencode) | OpenCode AI CLI container. | Auto-installs this add-on |
 | [ddev-claude-code](https://github.com/trebormc/ddev-claude-code) | Claude Code CLI container. | Auto-installs this add-on |
 | [ddev-ralph](https://github.com/trebormc/ddev-ralph) | Autonomous AI task orchestrator. | Uses SSH indirectly |
-| [ddev-ai-arena](https://github.com/trebormc/ddev-ai-arena) | Host command that runs N AI candidates in isolated worktree environments, gates them mechanically and judges them blind. | Each candidate environment gets its own keys |
+| [ddev-ai-arena](https://github.com/trebormc/ddev-ai-arena) | Host package (skill + scripts, not a DDEV add-on) that runs N AI candidates in isolated worktree environments, gates them mechanically and judges them blind. | Each candidate environment gets its own keys |
 | [ddev-beads](https://github.com/trebormc/ddev-beads) | Git-backed task tracker. | Sibling dependency |
 | [ddev-playwright-mcp](https://github.com/trebormc/ddev-playwright-mcp) | Headless Playwright browser. | Sibling dependency |
 | [drupal-ai-agents](https://github.com/trebormc/drupal-ai-agents) | 11 agents, 17 rules, 38 skills for Drupal development. | Agent configuration |
